@@ -1,0 +1,25 @@
+/* Base button */
+.admin-btn {
+  transition: background-color 0.15s ease;
+}
+
+/* Primary (Add / Update) */
+.admin-btn.primary:hover {
+  background-color: #3b82f6; /* lighter blue */
+}
+
+/* Edit */
+.admin-btn.edit:hover {
+  background-color: #38bdf8; /* lighter sky blue */
+}
+
+/* Delete */
+.admin-btn.delete:hover {
+  background-color: #ef4444; /* lighter red */
+}
+
+/* Disabled */
+.admin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

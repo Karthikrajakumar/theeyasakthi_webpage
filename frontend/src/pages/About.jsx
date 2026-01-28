@@ -1,5 +1,7 @@
 import PageTransition from "../PageTransition";
 import { useEffect, useRef } from "react";
+import { FaChevronRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import video1 from "../assets/video1.mp4";
 import video2 from "../assets/video2.mp4";
@@ -28,7 +30,17 @@ export default function About() {
     return () => observer.disconnect();
   }, []);
 
-  const play = (ref) => ref.current && ref.current.play();
+  const play = (ref) => {
+    if (ref.current) {
+      const playPromise = ref.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Auto-play was prevented or interrupted
+        });
+      }
+    }
+  };
+
   const pause = (ref) => {
     if (ref.current) {
       ref.current.pause();
@@ -55,6 +67,10 @@ export default function About() {
                 along with a satirical explanation of the party's drawbacks and why we don't need it.
               </r>
             </p>
+            <Link to="/about/political-parody" className="see-more-link">
+              <span>See More</span>
+              <FaChevronRight />
+            </Link>
           </div>
 
           <div className="about-photo">
@@ -84,6 +100,10 @@ export default function About() {
                 while promising the moon every four years—only to deliver the same tired script.
               </r>
             </p>
+            <Link to="/about/campaign-carnival" className="see-more-link">
+              <span>See More</span>
+              <FaChevronRight />
+            </Link>
           </div>
 
           <div className="about-photo">
@@ -110,9 +130,13 @@ export default function About() {
             <p>
               <r>
                 Who needs competence when you've got charisma and a Super PAC?
-                Watch as outrage turns into election funding—because the joke’s always on you.
+                Watch as outrage turns into election funding—because the joke's always on you.
               </r>
             </p>
+            <Link to="/about/outrage-economy" className="see-more-link">
+              <span>See More</span>
+              <FaChevronRight />
+            </Link>
           </div>
 
           <div className="about-photo">
@@ -130,6 +154,13 @@ export default function About() {
 
         {/* 🎨 Styles */}
         <style>{`
+          .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+          }
+
           .photo-frame video {
             width: 100%;
             height: 100%;
@@ -154,6 +185,55 @@ export default function About() {
           .about-text p {
             font-size: 22px;
             line-height: 1.7;
+            margin: 0 0 15px 0;
+          }
+
+          .about-text {
+            text-align: center;
+          }
+
+          .see-more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 16px auto 0;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+          }
+
+          .see-more-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateX(5px);
+            color: #fff;
+          }
+
+          .see-more-link svg {
+            transition: transform 0.3s ease;
+          }
+
+          .see-more-link:hover svg {
+            transform: translateX(4px);
+          }
+
+          @media (max-width: 768px) {
+            .hero h1 {
+              font-size: 1.5rem;
+            }
+
+            .see-more-link {
+              font-size: 14px;
+              padding: 8px 16px;
+            }
           }
         `}</style>
       </section>

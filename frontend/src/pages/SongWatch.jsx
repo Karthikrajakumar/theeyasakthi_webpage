@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import PageTransition from "../PageTransition";
 import WatchActions from "../components/WatchActions";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 export default function SongWatch() {
   const { id } = useParams();
@@ -14,9 +16,11 @@ export default function SongWatch() {
 
   /* -------- FETCH SONG -------- */
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/songs/${id}`)
-      .then((res) => res.json())
-      .then((data) => setSong(data));
+    const fetchSong = async () => {
+      const snap = await getDoc(doc(db, "songs", id));
+      if (snap.exists()) setSong({ id: snap.id, ...snap.data() });
+    };
+    fetchSong();
   }, [id]);
 
   /* -------- LOAD YOUTUBE PLAYER -------- */
@@ -81,7 +85,7 @@ export default function SongWatch() {
           <h1 className="video-title">{song.title}</h1>
 
           <WatchActions
-            itemId={song._id}
+            itemId={song.id}
             type="song"
             videoUrl={`https://www.youtube.com/watch?v=${song.videoId}`}
           />

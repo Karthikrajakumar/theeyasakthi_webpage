@@ -1,35 +1,48 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import adminApi from "../services/adminApi";
+import { auth } from "../firebase/firebase";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Listen to Firebase auth state
   useEffect(() => {
-    const token = localStorage.getItem("adminToken");
-    if (token) setIsAuthenticated(true);
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+
+    return unsubscribe;
   }, []);
 
-  const login = async (email, password) => {
-    const res = await adminApi.post("/admin/login", { email, password });
-    localStorage.setItem("adminToken", res.data.token);
-    setIsAuthenticated(true);
+  // Firebase login
+  const login = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
+  // Firebase logout
   const logout = () => {
-    localStorage.removeItem("adminToken");
-    setIsAuthenticated(false);
-    window.location.href = "/login";
+    return signOut(auth);
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, loading }}
+      value={{
+        currentUser,
+        isAuthenticated: !!currentUser,
+        login,
+        logout,
+        loading,
+      }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

@@ -17,7 +17,7 @@ import youtubeRoutes from "./routes/youtubeRoutes.js";
 dotenv.config();
 
 // ✅ Connect MongoDB (ONLY ONCE)
-connectDB();  
+connectDB();
 
 const app = express();
 

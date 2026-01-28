@@ -1,22 +1,33 @@
 import { useEffect, useState } from "react";
-
-const API_URL = "http://localhost:5000/api/blogs";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 const AdminBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [form, setForm] = useState({
     title: "",
     content: "",
-    youtubeLink: ""
+    youtubeLink: "",
   });
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔄 Fetch blogs
+  // 🔄 Fetch blogs (Firestore)
   const fetchBlogs = async () => {
     try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
+      const snapshot = await getDocs(collection(db, "blogs"));
+      const data = snapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
+      }));
       setBlogs(data);
     } catch (err) {
       console.error("Failed to fetch blogs", err);
@@ -27,7 +38,7 @@ const AdminBlogs = () => {
     fetchBlogs();
   }, []);
 
-  // ➕ Add / ✏️ Update blog
+  // ➕ Add / ✏️ Update blog (Firestore)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,16 +50,21 @@ const AdminBlogs = () => {
     try {
       setLoading(true);
 
-      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
-      const method = editingId ? "PUT" : "POST";
+      const payload = {
+        title: form.title,
+        content: form.content,
+        youtubeLink: form.youtubeLink,
+        updatedAt: serverTimestamp(),
+      };
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
-      });
-
-      if (!res.ok) throw new Error("Save failed");
+      if (editingId) {
+        await updateDoc(doc(db, "blogs", editingId), payload);
+      } else {
+        await addDoc(collection(db, "blogs"), {
+          ...payload,
+          createdAt: serverTimestamp(),
+        });
+      }
 
       setForm({ title: "", content: "", youtubeLink: "" });
       setEditingId(null);
@@ -61,24 +77,23 @@ const AdminBlogs = () => {
     }
   };
 
-  // ✏️ Edit
+  // ✏️ Edit (Firestore id)
   const handleEdit = (blog) => {
     setForm({
       title: blog.title || "",
       content: blog.content || "",
-      youtubeLink: blog.youtubeLink || ""
+      youtubeLink: blog.youtubeLink || "",
     });
-    setEditingId(blog._id);
+    setEditingId(blog.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // 🗑 Delete
+  // 🗑 Delete (Firestore)
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this blog?")) return;
 
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
+      await deleteDoc(doc(db, "blogs", id));
       fetchBlogs();
     } catch (err) {
       console.error(err);
@@ -90,7 +105,7 @@ const AdminBlogs = () => {
     <div className="page-scale">
       <h2>Blogs Management</h2>
 
-      {/* FORM */}
+      {/* FORM (UNCHANGED UI) */}
       <div style={styles.card}>
         <h3>{editingId ? "Edit Blog" : "Add New Blog"}</h3>
 
@@ -128,13 +143,13 @@ const AdminBlogs = () => {
             {loading
               ? "Saving..."
               : editingId
-              ? "Update Blog"
-              : "Add Blog"}
+                ? "Update Blog"
+                : "Add Blog"}
           </button>
         </form>
       </div>
 
-      {/* TABLE */}
+      {/* TABLE (UNCHANGED UI) */}
       <div style={{ marginTop: 40 }}>
         <h3>All Blogs</h3>
 
@@ -153,7 +168,7 @@ const AdminBlogs = () => {
               </thead>
               <tbody>
                 {blogs.map((blog) => (
-                  <tr key={blog._id}>
+                  <tr key={blog.id}>
                     <td style={styles.tdTitle}>{blog.title}</td>
 
                     <td style={styles.tdContent}>
@@ -186,7 +201,7 @@ const AdminBlogs = () => {
                       </button>
                       <button
                         style={styles.deleteBtn}
-                        onClick={() => handleDelete(blog._id)}
+                        onClick={() => handleDelete(blog.id)}
                       >
                         Delete
                       </button>
@@ -199,7 +214,7 @@ const AdminBlogs = () => {
         )}
       </div>
 
-      {/* 🔍 PAGE SCALE STYLES (same as before) */}
+      {/* PAGE SCALE STYLES (UNCHANGED) */}
       <style>
         {`
           .page-scale {
@@ -244,7 +259,7 @@ const AdminBlogs = () => {
   );
 };
 
-/* 🎨 Styles */
+/* 🎨 Styles (UNCHANGED) */
 const styles = {
   card: {
     background: "#fff",

@@ -1,34 +1,48 @@
 import { useEffect, useRef, useState } from "react";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { FaWhatsapp, FaXTwitter, FaFacebook, FaLink } from "react-icons/fa6";
+import { db } from "../firebase/firebase";
 
 export default function WatchActions({ itemId, type, videoUrl }) {
   const [reaction, setReaction] = useState(null);
   const [openShare, setOpenShare] = useState(false);
   const shareRef = useRef(null);
 
-  // Load reaction from DB
-  useEffect(() => {
-    fetch(
-      `${process.env.REACT_APP_API_URL}/api/reactions/${type}/${itemId}`
-    )
-      .then((res) => res.json())
-      .then((data) => setReaction(data?.reaction || null));
-  }, [itemId, type]);
+  const docId = `${type}_${itemId}`;
 
-  const updateReaction = (value) => {
+  // 🔄 Load reaction from Firestore
+  useEffect(() => {
+    const loadReaction = async () => {
+      try {
+        const snap = await getDoc(doc(db, "reactions", docId));
+        if (snap.exists()) {
+          setReaction(snap.data().reaction || null);
+        }
+      } catch (err) {
+        console.error("Failed to load reaction", err);
+      }
+    };
+
+    loadReaction();
+  }, [docId]);
+
+  // 👍👎 Update reaction in Firestore
+  const updateReaction = async (value) => {
     const newValue = reaction === value ? null : value;
     setReaction(newValue);
 
-    fetch(
-      `${process.env.REACT_APP_API_URL}/api/reactions/${type}/${itemId}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reaction: newValue }),
-      }
-    );
+    try {
+      await setDoc(
+        doc(db, "reactions", docId),
+        { reaction: newValue },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Failed to update reaction", err);
+    }
   };
 
-  // Close share popup on outside click
+  // ❌ Close share popup on outside click (UNCHANGED)
   useEffect(() => {
     const handler = (e) => {
       if (shareRef.current && !shareRef.current.contains(e.target)) {
@@ -49,9 +63,8 @@ export default function WatchActions({ itemId, type, videoUrl }) {
       </button>
 
       <button
-        className={`action-btn ${
-          reaction === "dislike" ? "active dislike" : ""
-        }`}
+        className={`action-btn ${reaction === "dislike" ? "active dislike" : ""
+          }`}
         onClick={() => updateReaction("dislike")}
       >
         👎 Dislike
@@ -72,7 +85,7 @@ export default function WatchActions({ itemId, type, videoUrl }) {
               target="_blank"
               rel="noreferrer"
             >
-              WhatsApp
+              <FaWhatsapp /> WhatsApp
             </a>
             <a
               href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -81,7 +94,7 @@ export default function WatchActions({ itemId, type, videoUrl }) {
               target="_blank"
               rel="noreferrer"
             >
-              X
+              <FaXTwitter /> X
             </a>
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -90,10 +103,10 @@ export default function WatchActions({ itemId, type, videoUrl }) {
               target="_blank"
               rel="noreferrer"
             >
-              Facebook
+              <FaFacebook /> Facebook
             </a>
             <button onClick={() => navigator.clipboard.writeText(videoUrl)}>
-              Copy Link
+              <FaLink /> Copy Link
             </button>
           </div>
         )}

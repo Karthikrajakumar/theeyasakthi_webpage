@@ -18,6 +18,9 @@ import YouTubeWatch from "./pages/YouTubeWatch";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
+const PoliticalParody = lazy(() => import("./pages/PoliticalParody"));
+const CampaignCarnival = lazy(() => import("./pages/CampaignCarnival"));
+const OutrageEconomy = lazy(() => import("./pages/OutrageEconomy"));
 const Blog = lazy(() => import("./pages/Blog"));
 const Posts = lazy(() => import("./pages/Posts"));
 const Categories = lazy(() => import("./pages/Categories"));
@@ -40,11 +43,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/about/political-parody" element={<PoliticalParody />} />
+          <Route path="/about/campaign-carnival" element={<CampaignCarnival />} />
+          <Route path="/about/outrage-economy" element={<OutrageEconomy />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/posts" element={<Posts />} />
 
           <Route path="/categories" element={<Categories />} />
-          
+
           <Route path="/songs" element={<Songs />} />
           <Route path="/songs/:id" element={<SongWatch />} />
 
@@ -53,11 +59,11 @@ export default function App() {
           <Route path="/videos/:id" element={<VideoWatch />} />
 
           <Route path="/podcasts" element={<Podcasts />} />
-          <Route path="/podcasts/:id" element={<PodcastWatch/>} />
+          <Route path="/podcasts/:id" element={<PodcastWatch />} />
 
           <Route path="/youtube/:id" element={<YouTubeWatch />} />
 
-          
+
           <Route path="/policy-analysis" element={<PolicyAnalysis />} />
           <Route path="/public-reactions" element={<PublicReactions />} />
         </Routes>

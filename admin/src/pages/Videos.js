@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import adminApi from "../services/adminApi";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { syncYouTubeVideos } from "../services/syncYouTubeVideos";
 
-const extractVideoId = (url) => {
-  const regex =
-    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-  const match = url.match(regex);
-  return match ? match[1] : "";
-};
+const extractVideoId = (url) =>
+  url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  )?.[1];
 
 const Videos = () => {
   const [videos, setVideos] = useState([]);
@@ -14,80 +22,60 @@ const Videos = () => {
   const [host, setHost] = useState("");
   const [url, setUrl] = useState("");
   const [editingId, setEditingId] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const fetchVideos = async () => {
-    try {
-      const res = await adminApi.get("/videos");
-      setVideos(res.data);
-    } catch (err) {
-      console.error("Failed to fetch videos", err);
-    } finally {
-      setLoading(false);
-    }
+    const snap = await getDocs(collection(db, "videos"));
+    setVideos(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
   };
 
   useEffect(() => {
     fetchVideos();
   }, []);
 
-  const handleAddVideo = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const videoId = extractVideoId(url);
-    if (!videoId) {
-      alert("Invalid YouTube URL");
-      return;
+    if (!videoId) return alert("Invalid YouTube URL");
+
+    const payload = { title, host, videoId, updatedAt: serverTimestamp() };
+
+    if (editingId) {
+      await updateDoc(doc(db, "videos", editingId), payload);
+    } else {
+      await addDoc(collection(db, "videos"), {
+        ...payload,
+        createdAt: serverTimestamp(),
+      });
     }
 
-    try {
-      if (editingId) {
-        await adminApi.put(`/videos/${editingId}`, {
-          title,
-          host,
-          videoId,
-        });
-      } else {
-        await adminApi.post("/videos", {
-          title,
-          host,
-          videoId,
-        });
-      }
-
-      setTitle("");
-      setHost("");
-      setUrl("");
-      setEditingId(null);
-      fetchVideos();
-    } catch {
-      alert("Failed to save video");
-    }
+    setTitle("");
+    setHost("");
+    setUrl("");
+    setEditingId(null);
+    fetchVideos();
   };
 
   const handleEdit = (video) => {
     setTitle(video.title);
     setHost(video.host);
     setUrl(`https://www.youtube.com/watch?v=${video.videoId}`);
-    setEditingId(video._id);
+    setEditingId(video.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this video?")) return;
-    await adminApi.delete(`/videos/${id}`);
-    setVideos((prev) => prev.filter((v) => v._id !== id));
+    await deleteDoc(doc(db, "videos", id));
+    setVideos((prev) => prev.filter((v) => v.id !== id));
   };
-
-  if (loading) return <p>Loading videos...</p>;
 
   return (
     <div className="page-scale">
       <h2>Videos Management</h2>
 
-      {/* ➕ ADD / EDIT FORM */}
-      <form onSubmit={handleAddVideo} style={styles.form}>
+      <form onSubmit={handleSubmit} style={styles.form}>
         <input
-          placeholder="Video Title"
+          placeholder="Video title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -105,12 +93,26 @@ const Videos = () => {
           required
         />
 
-        <button type="submit" className="admin-primary-btn">
+        <button className="admin-primary-btn">
           {editingId ? "Update Video" : "Add Video"}
         </button>
       </form>
+      <button
+        onClick={syncYouTubeVideos}
+        style={{
+          background: "#ff0055",
+          color: "#fff",
+          padding: "10px 16px",
+          borderRadius: "6px",
+          border: "none",
+          cursor: "pointer",
+          marginBottom: "16px",
+          fontWeight: "bold",
+        }}
+      >
+        🔄 Sync Latest YouTube Videos
+      </button>
 
-      {/* 📋 VIDEOS TABLE */}
       {videos.length === 0 ? (
         <p>No videos found.</p>
       ) : (
@@ -124,7 +126,7 @@ const Videos = () => {
           </thead>
           <tbody>
             {videos.map((video) => (
-              <tr key={video._id}>
+              <tr key={video.id}>
                 <td>{video.title}</td>
                 <td>{video.host}</td>
                 <td>
@@ -135,7 +137,7 @@ const Videos = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(video._id)}
+                    onClick={() => handleDelete(video.id)}
                     style={styles.deleteBtn}
                   >
                     Delete
@@ -147,65 +149,12 @@ const Videos = () => {
         </table>
       )}
 
-      {/* 🎨 PAGE SCALE STYLES */}
-      <style>
-        {`
-          .page-scale {
-            font-size: 1.1rem;
-          }
-
-          .page-scale h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-          }
-
-          .page-scale input {
-            font-size: 1rem;
-            padding: 12px 14px;
-            min-height: 44px;
-          }
-
-          .page-scale button {
-            font-size: 1rem;
-            padding: 12px 16px;
-            min-height: 44px;
-            border-radius: 6px;
-          }
-
-          .page-scale table th,
-          .page-scale table td {
-            font-size: 1rem;
-            padding: 14px 16px;
-          }
-
-          .admin-primary-btn {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 
-              background-color 0.25s ease,
-              transform 0.2s ease,
-              box-shadow 0.2s ease;
-          }
-
-          .admin-primary-btn:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-          }
-
-          .admin-primary-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
-          }
-        `}
-      </style>
+      {sharedStyles}
     </div>
   );
 };
 
+/* ✅ REQUIRED STYLES (same as Podcasts) */
 const styles = {
   form: {
     display: "flex",
@@ -225,11 +174,51 @@ const styles = {
     marginRight: "10px",
   },
   deleteBtn: {
-    background: "#c62828",
+    background: "#dc2626",
     color: "#fff",
     border: "none",
     cursor: "pointer",
   },
 };
+
+const sharedStyles = (
+  <style>
+    {`
+      .page-scale {
+        font-size: 1.1rem;
+      }
+      .page-scale h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      .page-scale input {
+        font-size: 1rem;
+        padding: 12px 14px;
+        min-height: 44px;
+      }
+      .page-scale button {
+        font-size: 1rem;
+        padding: 12px 16px;
+        min-height: 44px;
+        border-radius: 6px;
+      }
+      .page-scale table th,
+      .page-scale table td {
+        font-size: 1rem;
+        padding: 14px 16px;
+      }
+      .admin-primary-btn {
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .admin-primary-btn:hover {
+        background: #1d4ed8;
+      }
+    `}
+  </style>
+);
 
 export default Videos;

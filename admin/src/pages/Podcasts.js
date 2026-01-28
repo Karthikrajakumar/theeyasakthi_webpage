@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import adminApi from "../services/adminApi";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
+// 🔗 Extract YouTube video ID
 const extractVideoId = (url) => {
   const regex =
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -16,22 +26,23 @@ const Podcasts = () => {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 📥 FETCH PODCASTS
   const fetchPodcasts = async () => {
-    try {
-      const res = await adminApi.get("/podcasts");
-      setPodcasts(res.data);
-    } catch (err) {
-      console.error("Failed to fetch podcasts", err);
-    } finally {
-      setLoading(false);
-    }
+    const snapshot = await getDocs(collection(db, "podcasts"));
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setPodcasts(data);
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchPodcasts();
   }, []);
 
-  const handleAddPodcast = async (e) => {
+  // ➕ ADD / ✏️ UPDATE PODCAST
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const videoId = extractVideoId(url);
@@ -40,43 +51,47 @@ const Podcasts = () => {
       return;
     }
 
-    try {
-      if (editingId) {
-        await adminApi.put(`/podcasts/${editingId}`, {
-          title,
-          host,
-          videoId,
-        });
-      } else {
-        await adminApi.post("/podcasts", {
-          title,
-          host,
-          videoId,
-        });
-      }
+    const payload = {
+      title,
+      host,
+      videoId,
+      updatedAt: serverTimestamp(),
+    };
 
-      setTitle("");
-      setHost("");
-      setUrl("");
-      setEditingId(null);
-      fetchPodcasts();
-    } catch {
-      alert("Failed to save podcast");
+    if (editingId) {
+      await updateDoc(doc(db, "podcasts", editingId), payload);
+    } else {
+      await addDoc(collection(db, "podcasts"), {
+        ...payload,
+        createdAt: serverTimestamp(),
+      });
     }
+
+    resetForm();
+    fetchPodcasts();
   };
 
+  // ✏️ EDIT
   const handleEdit = (podcast) => {
     setTitle(podcast.title);
     setHost(podcast.host);
     setUrl(`https://www.youtube.com/watch?v=${podcast.videoId}`);
-    setEditingId(podcast._id);
+    setEditingId(podcast.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // 🗑️ DELETE
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this podcast?")) return;
+    await deleteDoc(doc(db, "podcasts", id));
+    setPodcasts((prev) => prev.filter((p) => p.id !== id));
+  };
 
-    await adminApi.delete(`/podcasts/${id}`);
-    setPodcasts((prev) => prev.filter((p) => p._id !== id));
+  const resetForm = () => {
+    setTitle("");
+    setHost("");
+    setUrl("");
+    setEditingId(null);
   };
 
   if (loading) return <p>Loading podcasts...</p>;
@@ -86,29 +101,31 @@ const Podcasts = () => {
       <h2>Podcasts Management</h2>
 
       {/* ➕ ADD / EDIT FORM */}
-      <form onSubmit={handleAddPodcast} style={styles.form}>
+      <form onSubmit={handleSubmit} style={styles.form}>
         <input
           placeholder="Podcast Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
         />
+
         <input
           placeholder="Host"
           value={host}
           onChange={(e) => setHost(e.target.value)}
           required
         />
+
         <input
           placeholder="YouTube URL"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           required
         />
-       <button type="submit" className="admin-primary-btn">
-  {editingId ? "Update Podcast" : "Add Podcast"}
-</button>
 
+        <button type="submit" className="admin-primary-btn">
+          {editingId ? "Update Podcast" : "Add Podcast"}
+        </button>
       </form>
 
       {/* 📋 TABLE */}
@@ -125,7 +142,7 @@ const Podcasts = () => {
           </thead>
           <tbody>
             {podcasts.map((podcast) => (
-              <tr key={podcast._id}>
+              <tr key={podcast.id}>
                 <td>{podcast.title}</td>
                 <td>{podcast.host}</td>
                 <td>
@@ -136,7 +153,7 @@ const Podcasts = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(podcast._id)}
+                    onClick={() => handleDelete(podcast.id)}
                     style={styles.deleteBtn}
                   >
                     Delete
@@ -148,7 +165,7 @@ const Podcasts = () => {
         </table>
       )}
 
-      {/* 🔍 PAGE SCALE STYLES (same as other admin pages) */}
+      {/* 🎨 SAME SCALE STYLES AS POSTS */}
       <style>
         {`
           .page-scale {
@@ -180,28 +197,27 @@ const Podcasts = () => {
           }
 
           .admin-primary-btn {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 
-    background-color 0.25s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition:
+              background-color 0.25s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+          }
 
-.admin-primary-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
+          .admin-primary-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+          }
 
-.admin-primary-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
-}
-
+          .admin-primary-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+          }
         `}
       </style>
     </div>

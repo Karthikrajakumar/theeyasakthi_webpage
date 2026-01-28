@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import PageTransition from "../PageTransition";
 import WatchActions from "../components/WatchActions";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 export default function PodcastWatch() {
   const { id } = useParams();
@@ -14,9 +16,11 @@ export default function PodcastWatch() {
 
   /* -------- FETCH PODCAST -------- */
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/podcasts/${id}`)
-      .then((res) => res.json())
-      .then((data) => setPodcast(data));
+    const fetchPodcast = async () => {
+      const snap = await getDoc(doc(db, "podcasts", id));
+      if (snap.exists()) setPodcast({ id: snap.id, ...snap.data() });
+    };
+    fetchPodcast();
   }, [id]);
 
   /* -------- LOAD YOUTUBE PLAYER -------- */
@@ -79,7 +83,7 @@ export default function PodcastWatch() {
           <h1 className="video-title">{podcast.title}</h1>
 
           <WatchActions
-            itemId={podcast._id}
+            itemId={podcast.id}
             type="podcast"
             videoUrl={`https://www.youtube.com/watch?v=${podcast.videoId}`}
           />

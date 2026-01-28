@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import PageTransition from "../PageTransition";
 import WatchActions from "../components/WatchActions";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 
 export default function VideoWatch() {
   const { id } = useParams();
@@ -13,11 +15,16 @@ export default function VideoWatch() {
   const ytContainerRef = useRef(null);
 
   /* -------- FETCH VIDEO -------- */
+
+
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/videos/${id}`)
-      .then((res) => res.json())
-      .then((data) => setVideo(data));
+    const fetchVideo = async () => {
+      const snap = await getDoc(doc(db, "videos", id));
+      if (snap.exists()) setVideo({ id: snap.id, ...snap.data() });
+    };
+    fetchVideo();
   }, [id]);
+
 
   /* -------- LOAD YOUTUBE PLAYER -------- */
   useEffect(() => {
@@ -79,7 +86,7 @@ export default function VideoWatch() {
           <h1 className="video-title">{video.title}</h1>
 
           <WatchActions
-            itemId={video._id}
+            itemId={video.id}
             type="video"
             videoUrl={`https://www.youtube.com/watch?v=${video.videoId}`}
           />

@@ -12,6 +12,10 @@ import Videos from "./pages/Videos";
 import Posts from "./pages/Posts";
 
 import "./styles/adminButtons.css";
+import { auth } from "./firebase/firebase";
+
+console.log("Firebase auth object:", auth);
+
 
 
 function App() {

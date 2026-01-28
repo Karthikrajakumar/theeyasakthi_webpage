@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunktheeyasakthi_webpage=self.webpackChunktheeyasakthi_webpage||[]).push([[785],{785(e,s,a){a.r(s),a.d(s,{default:()=>c});var i=a(579);function c(){return(0,i.jsxs)("section",{className:"hero",children:[(0,i.jsx)("h1",{children:"Policy Analysis"}),(0,i.jsx)("p",{children:"Deep-dive analysis of policies and outcomes."})]})}}}]);
+//# sourceMappingURL=785.7c8143ba.chunk.js.map

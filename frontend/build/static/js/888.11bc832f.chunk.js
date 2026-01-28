@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunktheeyasakthi_webpage=self.webpackChunktheeyasakthi_webpage||[]).push([[888],{888(e,s,a){a.r(s),a.d(s,{default:()=>c});var n=a(579);function c(){return(0,n.jsxs)("section",{className:"hero",children:[(0,n.jsx)("h1",{children:"Public Reactions"}),(0,n.jsx)("p",{children:"Collected responses and public opinion."})]})}}}]);
-//# sourceMappingURL=888.11bc832f.chunk.js.map

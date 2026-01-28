@@ -11,6 +11,11 @@
 # production
 /build
 
+# React build folders
+frontend/build
+admin/build
+
+
 # misc
 .DS_Store
 .env.local

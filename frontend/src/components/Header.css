@@ -1,0 +1,683 @@
+/* ================= HEADER ================= */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  overflow: visible;
+}
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 20px; /* Further reduced padding height */
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* ================= NAV RIGHT CONTAINER ================= */
+.nav-right {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* ================= BRAND ================= */
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 70px; /* Increased height for a bigger logo */
+  margin-right: 12px;
+}
+
+.logo:hover {
+  transform: scaleX(1.2); /* Make the logo wider on hover */
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+}
+
+.title-link {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+/* ================= DESKTOP NAV ================= */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  
+}
+
+.nav-btn {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 700; /* Professional font weight */
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  position: relative;
+}
+
+.nav-btn:hover {
+  background-color: #e8e8e8;
+  color: #dc2626; /* Professional red */
+  text-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.nav-btn.active {
+  color: #ffffff;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* ================= DROPDOWN ================= */
+.dropdown {
+  position: relative;
+  z-index: 30;
+}
+
+.dropdown-btn {
+  cursor: pointer;
+  position: relative;
+  z-index: 40;
+  pointer-events: auto;
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: none;
+  border: none;
+  font-weight: 700; /* Professional font weight */
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.dropdown-btn:hover {
+  background-color: #e8e8e8;
+  color: #dc2626; /* Professional red */
+  text-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.dropdown-btn.active {
+  color: #ffffff;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  min-width: 160px;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.dropdown-link {
+  font-size: 1rem; /* Match nav button font size */
+  font-weight: bold; /* Set text weight to bold */
+  color: #333; /* Match nav button text color */
+  text-decoration: none;
+  padding: 8px 14px; /* Match nav button padding */
+  display: block;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  list-style-type: disc; /* Add bullet points */
+  list-style-position: inside; /* Position bullets inside the container */
+  padding-left: 20px; /* Add space between bullet and text */
+   /* Capitalize only the first letter of each word */
+  letter-spacing: 1px; /* Add spacing between letters */
+  font-weight: bold; /* Set text to bold */
+}
+
+.dropdown-link:hover {
+  background-color: #f0f0f0; /* Match nav button hover background */
+  color: #000; /* Match nav button hover text color */
+}
+
+/* Change color of dropdown link after selection */
+.dropdown-link.active {
+  color: #d32f2f; /* Professional theme color */
+  font-weight: bold;
+  background-color: #fce4ec; /* Light background to highlight selection */
+}
+
+/* Add professional hover behavior for dropdown links */
+.dropdown-link {
+  position: relative;
+  overflow: hidden;
+  
+}
+
+.dropdown-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #000; /* Highlight color */
+  transition: width 0.3s ease;
+}
+
+.dropdown-link:hover::after {
+  width: 100%; /* Expand underline on hover */
+}
+
+.dropdown-link:hover {
+  background-color: #f0f0f0; /* Match nav button hover background */
+  color: #000; /* Match nav button hover text color */
+}
+
+/* Ensure dropdown menu is displayed correctly for desktop */
+.desktop-nav .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 50;
+}
+
+.desktop-nav .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* ================= MOBILE MENU TOGGLE ================= */
+.mobile-menu-toggle {
+  display: none;
+  font-size: 1rem;
+  background: #e8e8e8; /* Light grey background */
+  border: 1px solid #000; /* Black border */
+  cursor: pointer;
+  padding: 6px 10px;
+  z-index: 100;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-menu-toggle:hover {
+  background-color: #d0d0d0; /* Darker grey on hover */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= MOBILE NAV ================= */
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px;
+  background: #f0f0f0; /* Lighter grey background */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  position: fixed;
+  top: 90px; /* Moved further down */
+  right: 0;
+  left: auto;
+  width: auto;
+  min-width: 180px;
+  max-width: 250px;
+  list-style: none;
+  margin: 0;
+  z-index: 9999;
+  box-sizing: border-box;
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  border-radius: 0 0 0 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-12px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.mobile-nav.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.mobile-nav li {
+  width: 100%;
+  text-align: center;
+}
+
+.mobile-nav .nav-btn {
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  text-align: center;
+  width: 100%;
+  display: block;
+  background: #f0f0f0; /* Ensure buttons match the menu background */
+  font-weight: 700; /* Professional font weight */
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  position: relative;
+}
+
+/* Hover effect for mobile nav buttons */
+.mobile-nav .nav-btn:hover {
+  background-color: #e8e8e8;
+  color: #dc2626; /* Professional red */
+  text-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+/* Active/selected state for mobile nav buttons */
+.mobile-nav .nav-btn.active,
+.mobile-nav .nav-btn[aria-current="page"] {
+  color: #ffffff;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.mobile-nav .dropdown-menu {
+  position: static;
+  box-shadow: none;
+  background: #f0f0f0; /* Lighter grey background for dropdown menu */
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.mobile-nav .dropdown-link {
+  font-size: 0.9rem;
+  padding: 3px 6px; /* Further reduced padding for tighter spacing */
+  text-align: center;
+}
+
+/* Mobile category dropdown */
+.mobile-dropdown {
+  margin-left: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+@media (max-width: 1024px) {
+  .mobile-nav .mobile-dropdown {
+    display: flex !important; /* Enable dropdown for tablet */
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-nav .mobile-dropdown {
+    display: flex !important; /* Enable dropdown for mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-nav .mobile-dropdown {
+    display: flex !important; /* Enable dropdown for small mobile */
+  }
+}
+
+@media (max-width: 400px) {
+  .mobile-nav .mobile-dropdown {
+    display: flex !important; /* Enable dropdown for extra small mobile */
+  }
+}
+
+/* Adjusting the top position of the mobile menu for all breakpoints */
+.mobile-nav {
+  top: 90px; /* Moved further down */
+  max-height: calc(100vh - 90px);
+}
+
+@media (max-width: 1024px) {
+  .mobile-nav {
+    top: 95px; /* Moved further down */
+    max-height: calc(100vh - 95px);
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-nav {
+    top: 85px; /* Moved further down */
+    max-height: calc(100vh - 85px);
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-nav {
+    top: 78px; /* Moved further down */
+    max-height: calc(100vh - 78px);
+  }
+}
+
+@media (max-width: 400px) {
+  .mobile-nav {
+    top: 70px; /* Moved further down */
+    max-height: calc(100vh - 70px);
+  }
+}
+
+/* ================= RESPONSIVE - DESKTOP (1025px+) ================= */
+@media (min-width: 1025px) {
+  .desktop-nav {
+    display: flex;
+  }
+
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+
+  .mobile-nav {
+    display: none !important;
+    pointer-events: none !important;
+  }
+}
+
+/* ================= RESPONSIVE - TABLET (769px - 1024px) ================= */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+  }
+
+  .header-inner {
+    padding: 12px 20px;
+  }
+
+  .logo {
+    height: 45px;
+  }
+
+  .title-link {
+    font-size: 1.1rem;
+  }
+
+  .mobile-nav {
+    top: 70px;
+    max-height: calc(100vh - 70px);
+    padding: 10px;
+  }
+
+  .mobile-nav .nav-btn {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .mobile-nav .dropdown-link {
+    font-size: 0.9rem;
+    padding: 3px 6px; /* Further reduced padding for tighter spacing */
+  }
+}
+
+/* ================= RESPONSIVE - MOBILE (481px - 768px) ================= */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+    font-size: 1rem;
+  }
+
+  .header-inner {
+    padding: 10px 16px;
+  }
+
+  .logo {
+    height: 42px;
+    margin-right: 10px;
+  }
+
+  .title-link {
+    font-size: 10px;
+  }
+
+  .mobile-nav {
+    top: 62px;
+    max-height: calc(100vh - 62px);
+    padding: 10px;
+  }
+
+  .mobile-nav .nav-btn {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .mobile-nav .dropdown-link {
+    font-size: 0.85rem;
+    padding: 3px 6px; /* Further reduced padding for tighter spacing */
+  }
+}
+
+/* ================= RESPONSIVE - SMALL MOBILE (max 480px) ================= */
+@media (max-width: 480px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+    font-size: 0.75rem;
+    padding: 3px;
+  }
+
+  .header-inner {
+    padding: 2px 10px;
+  }
+
+  .logo {
+    height: 38px;
+    
+  }
+
+  .title-link {
+    font-size: 0.85rem;
+    margin-right: 15px;
+  }
+
+  .mobile-nav {
+    top: 55px;
+    max-height: calc(100vh - 55px);
+    padding: 8px;
+  }
+
+  .mobile-nav .nav-btn {
+    font-size: 0.85rem;
+    padding: 10px 12px;
+  }
+
+  .mobile-nav .dropdown-menu {
+    margin-left: 6px;
+  }
+
+  .mobile-nav .dropdown-link {
+    font-size: 0.8rem;
+    padding: 3px 6px; /* Further reduced padding for tighter spacing */
+  }
+}
+
+/* ================= RESPONSIVE - EXTRA SMALL MOBILE (max 400px) ================= */
+@media (max-width: 400px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-menu-toggle {
+    display: block !important;
+    font-size: 1.05rem;
+    padding: 2px;
+  }
+
+  .header-inner {
+    padding: 6px 10px;
+  }
+
+  .logo {
+    height: 35px;
+    margin-right: 6px;
+  }
+
+  .title-link {
+    font-size: 0.9rem;
+  }
+
+  .mobile-nav {
+    top: 50px;
+    max-height: calc(100vh - 50px);
+    padding: 6px;
+  }
+
+  .mobile-nav .nav-btn {
+    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
+
+  .mobile-nav .dropdown-menu {
+    margin-left: 4px;
+  }
+
+  .mobile-nav .dropdown-link {
+    font-size: 0.75rem;
+    padding: 3px 6px; /* Further reduced padding for tighter spacing */
+  }
+}
+
+/* Ensure dropdown menu is visible for mobile and tablet */
+.mobile-nav .dropdown-menu {
+  display: block !important; /* Make dropdown menu visible */
+  position: relative; /* Adjust position for mobile */
+  box-shadow: none; /* Remove shadow for mobile */
+  background: transparent; /* Match mobile background */
+  border-radius: 0; /* Remove border radius for mobile */
+  padding: 0; /* Adjust padding */
+}
+
+.mobile-nav .dropdown-link {
+  display: block;
+  padding: 8px 12px; /* Adjust padding for better spacing */
+  text-align: left; /* Align text to the left */
+}
+
+/* Update styles for Songs, Videos, Podcasts buttons */
+.dropdown-link {
+  text-transform: none; /* Change text to small letters */
+  letter-spacing: 1px; /* Retain spacing between letters */
+  font-size: 1rem; /* Match size with other navigation buttons */
+  padding: 8px 14px; /* Adjust padding to match other buttons */
+}
+
+/* ===== MOBILE/TABLET: ALWAYS-OPEN CATEGORIES ===== */
+
+.mobile-category-section {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.mobile-category-title {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #333;
+  padding: 4px 6px;
+}
+
+.mobile-dropdown.always-open {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+
+.mobile-dropdown.always-open a {
+  font-size: 0.85rem;
+  padding: 3px 6px;
+  text-decoration: none;
+  color: #444;
+  line-height: 1.2;
+}
+
+/* Desktop unaffected */
+@media (min-width: 1025px) {
+  .mobile-category-section {
+    display: none;
+  }
+}
+
+
+
+
+/* ===== MOBILE/TABLET: REMOVE HOVER FOR CATEGORY ITEMS ===== */
+
+@media (max-width: 1024px) {
+  /* Disable hover background for category links */
+  .mobile-dropdown .nav-btn:hover {
+    background: transparent;
+  }
+
+  /* Also prevent accidental active highlight */
+  .mobile-dropdown .nav-btn:active {
+    background: transparent;
+  }
+}
+
+/* Force categories dropdown to always be visible on mobile view */
+@media (max-width: 1024px) {
+  .mobile-nav .dropdown-menu {
+    display: block !important; /* Ensure visibility */
+    height: auto !important; /* Ensure full height */
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform-origin: top;
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .mobile-nav.open .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+

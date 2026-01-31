@@ -158,7 +158,11 @@ export default function About() {
             font-size: 2rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+          }
+
+          .hero {
+            padding: 20px 40px; /* Further reduced padding */
           }
 
           .photo-frame video {
@@ -177,15 +181,15 @@ export default function About() {
           }
 
           .about-text h2 {
-            font-size: 30px;
+            font-size: 28px;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
           }
 
           .about-text p {
-            font-size: 22px;
+            font-size: 20px;
             line-height: 1.7;
-            margin: 0 0 15px 0;
+            margin: 0 0 10px 0;
           }
 
           .about-text {
@@ -196,7 +200,7 @@ export default function About() {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin: 16px auto 0;
+            margin: 8px auto 0;
             padding: 8px 16px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -228,7 +232,15 @@ export default function About() {
           @media (max-width: 768px) {
             .hero h1 {
               font-size: 1.5rem;
+              margin-bottom: 0;
+              
             }
+              .about-text h2{
+              font-size: 28px;
+        }
+              .about-text p{
+              font-size: 15px;
+              }
 
             .see-more-link {
               font-size: 14px;

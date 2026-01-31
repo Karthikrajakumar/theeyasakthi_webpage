@@ -112,8 +112,8 @@ export default function Blog() {
       <style>{`
         .blog-page-header {
           text-align: center;
-          padding: 40px 20px;
-          margin-bottom: 40px;
+          padding: 30px;
+          
         }
 
         .blog-page-header h1 {

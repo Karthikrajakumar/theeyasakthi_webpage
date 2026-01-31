@@ -13,7 +13,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 5px;
     flex-direction: column;
     gap: 4px;
 }
@@ -21,10 +21,10 @@
 .carousel-title {
     color: #ffffff;
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     letter-spacing: 1.5px;
     text-align: center;
-    font-weight: 900;
+    font-weight: 500;
 }
 
 .carousel-msg {
@@ -142,14 +142,30 @@
     .carousel-stack {
         gap: 22px;
     }
-
-    .carousel-section {
-        padding: 14px;
+    .carousel-title {
+        font-size: 1.4rem;
     }
-
     .nav {
         width: 36px;
         height: 36px;
         font-size: 1rem;
+    }
+    .track-wrapper{
+        max-width: calc(100vw - 40px);
+        min-height: 300px;
+        
+    }
+    .carousel-section{
+        padding: 20px;
+        margin: 25px 0 ;
+    }
+    .img.thumb-img{
+        max-height: 300px;
+    }
+    .simple-carousel{
+        gap: 20px;
+    }
+    .home-bg{
+        padding-bottom: 5px;
     }
 }

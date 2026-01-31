@@ -25,14 +25,14 @@ export default function Home() {
         {/* TEXT OVERLAY BELOW HERO */}
         <section className="intro-hero">
           <h1>Here you can enjoy politics in a sarcastic way.</h1>
-          <p>Welcome to Theeysakthi TN</p>
+          <p>Welcome to TheeyasakthiTN</p>
         </section>
 
         {/* ABOUT */}
-        <section className="about-preview container">
+        <section className="about-preview">
           <h2 className="about-subtitle">About Theeyasakthi</h2>
 
-          <p style={{  fontSize: "1.5rem", opacity: ".9"  }}>
+          <p >
              <r>
               Discover the satire, stories, and spicy political takes behind our content.
               Learn why we do what we do — with humour, honesty, and a bold voice. </r>

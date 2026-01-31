@@ -14,7 +14,7 @@ const Footer = ({ year = new Date().getFullYear() }) => {
           {/* LEFT — Logo + Brand */}
           <div className="footer-brand">
             <img src={logo} alt="Theeyasakthi logo" className="footer-logo" />
-            <span className="footer-name">THEEYASAKTHI</span>
+            <span className="footer-name">THEEYASAKTHITN</span>
           </div>
 
           {/* RIGHT — Social Section */}

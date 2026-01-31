@@ -101,7 +101,7 @@ export default function WatchActions({ itemId, type, videoUrl }) {
                 videoUrl
               )}`}
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer"  
             >
               <FaFacebook /> Facebook
             </a>

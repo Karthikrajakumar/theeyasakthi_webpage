@@ -114,7 +114,7 @@ export default function Podcasts() {
           height: 40px;
           padding: 8px 12px;
           border: 2px solid rgba(255, 255, 255, 0.3);
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(255, 0, 0, 0.1);
           color: #fff;
           border-radius: 8px;
           cursor: pointer;
@@ -125,16 +125,16 @@ export default function Podcasts() {
         }
 
         .pagination-btn:hover {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 0, 0, 0.3);
           border-color: rgba(255, 255, 255, 0.5);
           transform: translateY(-2px);
         }
 
         .pagination-btn.active {
-          background: linear-gradient(135deg, #007bff, #0056b3);
-          border-color: #0056b3;
+          background: linear-gradient(135deg, #ff0000, #ffffff);
+          border-color: #ff0000;
           color: #fff;
-          box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+          box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
         }
 
         @media (max-width: 768px) {

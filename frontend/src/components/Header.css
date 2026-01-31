@@ -218,6 +218,12 @@ header {
   display: block;
 }
 
+/* Adjust dropdown menu position for desktop view */
+.desktop-nav .dropdown-menu {
+  left: auto; /* Reset default left alignment */
+  right: 0; /* Align dropdown to the right side */
+}
+
 /* ================= MOBILE MENU TOGGLE ================= */
 .mobile-menu-toggle {
   display: none;

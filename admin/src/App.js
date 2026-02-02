@@ -4,6 +4,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminBlogs from "./pages/AdminBlogs";
 
+import Analytics from "./pages/Analytics";
+
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Songs from "./pages/Songs";
@@ -34,6 +37,8 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route path="/analytics" element={<Analytics />} />
+
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/songs" element={<Songs />} />

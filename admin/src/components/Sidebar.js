@@ -20,6 +20,7 @@ const Sidebar = () => {
           <Link to="/videos" style={{ ...styles.link, ...isActive("/videos") }}>Videos</Link>
           <Link to="/blogs" style={{ ...styles.link, ...isActive("/blogs") }}>Blogs</Link>
           <Link to="/posts" style={{ ...styles.link, ...isActive("/posts") }}>Posts</Link>
+          <Link to="/analytics" style={{ ...styles.link, ...isActive("/analytics") }}>Analytics</Link>
         </nav>
       </div>
 
